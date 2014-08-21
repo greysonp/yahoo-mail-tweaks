@@ -1,0 +1,7 @@
+.reflect-y {
+    transform: scale(-1, 1);
+}
+
+.icon.reflect-y {
+    transition: none;
+}
