@@ -2,9 +2,20 @@
 
     var EXPAND_DISTANCE = 200;
 
+    var $emailList;
+    var oldEmailCount;
+
     $(document).ready(init);
 
     function init() {
+        initExpandButton();
+        initNotifications();
+    }
+
+    // ===============================
+    // Expanding Sidebar
+    // ===============================
+    function initExpandButton() {
         $('.nav-5').removeClass('nav-5').addClass('nav-6');
         var li = $('<li></li>', {
             'role': 'tab',
@@ -50,6 +61,48 @@
 
         $leftPanel.width($leftPanel.width() - EXPAND_DISTANCE);
         $rightPanel.css('margin-left', '0');
+    }
+
+    // ===============================
+    // Notifications
+    // ===============================
+    function initNotifications() {
+        $emailList = $('.list-view-items-page');
+        oldEmailCount = getEmailCount();
+        setInterval(checkNotifications, 1000);
+    }
+
+    function checkNotifications() {
+        $emailList = $('.list-view-items-page');
+        var emailCount = getEmailCount();
+
+        // If there's only one new email
+        if (emailCount === oldEmailCount + 1) {
+            createNotification('You Have a New Email!', 'Go check it out!');
+        }
+        // If there's more than one new email
+        else if (emailCount > oldEmailCount) {
+            var numNew = emailCount - oldEmailCount;
+            createNotification('You Have ' + numNew + ' New Emails', 'Go check them out!');
+        }
+        oldEmailCount = emailCount;
+    }
+
+    function getEmailCount() {
+        if ($emailList) {
+            return $emailList.children().length;
+        }
+        return 0;
+    }
+
+    function createNotification(title, message) {
+        chrome.runtime.sendMessage({ 
+            'action': 'notification',
+            'params': {
+                'title': title,
+                'message': message
+            }
+        });
     }
 
 })()

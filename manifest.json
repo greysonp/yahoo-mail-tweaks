@@ -33,7 +33,12 @@
     }
   ],
 
+  "background": {
+    "scripts": [ "js/background.js" ]
+  },
+
   "permissions": [
+    "notifications"
   ],
 
   "web_accessible_resources": [
