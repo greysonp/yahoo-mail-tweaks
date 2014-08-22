@@ -10,6 +10,7 @@
     function init() {
         initExpandButton();
         initNotifications();
+        initAutoRefresh();
     }
 
     // ===============================
@@ -103,6 +104,15 @@
                 'message': message
             }
         });
+    }
+
+    // ===============================
+    // AutoRefresh
+    // ===============================
+    function initAutoRefresh() {
+        setInterval(function() {
+            $('#btn-checkmail').click();
+        }, 5000)
     }
 
 })()
