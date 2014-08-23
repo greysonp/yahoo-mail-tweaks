@@ -5,3 +5,19 @@
 .icon.reflect-y {
     transition: none;
 }
+
+.drag-bar {
+	height: 100%;
+	width: 7px;
+	position: absolute;
+	right: 0;
+}
+
+.drag-bar:hover {
+	cursor: col-resize;
+}
+
+#shellnavigation {
+	webkit-transition: none !important;
+	transition: none !important;
+}
