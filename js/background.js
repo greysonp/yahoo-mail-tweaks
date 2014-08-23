@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(
 function makeNotification(title, message) {
     chrome.notifications.create('id', {
         'type': 'basic',
-        'iconUrl': chrome.extension.getURL('img/icon.png'),
+        'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
         'title': title,
         'message': message
     }, function(id) {
