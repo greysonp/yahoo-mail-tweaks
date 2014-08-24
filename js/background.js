@@ -1,3 +1,7 @@
+chrome.browserAction.onClicked.addListener(function(tab) {
+    navigateToMail();
+});
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log('Received a message!');
@@ -16,5 +20,23 @@ function makeNotification(title, message) {
         'message': message
     }, function(id) {
         console.log(id);
+    });
+}
+
+function navigateToMail() {
+    chrome.tabs.query({
+        'url': 'https://*.mail.yahoo.com/*'
+    }, function(tabs) {
+        // If a mail tab isn't open, create one
+        if (tabs.length == 0) {
+            chrome.tabs.create({ 
+                'url': 'https://mail.yahoo.com/'
+            });
+        }
+        // Otherwise, navigate to the first instance of an open mail tab
+        else {
+            chrome.tabs.update(tabs[0].id, { 'active': true });
+            chrome.windows.update(tabs[0].windowId, { 'focused': true });
+        }
     });
 }
