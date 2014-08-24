@@ -2,12 +2,9 @@ this.ymail = this.ymail || {};
 
 (function(module) {
 	
-	var $inboxLink;
-
 	module.AutoRefresh = function() {
-		$inboxLink = $('#storm-listnav a').first();
         setInterval(function() {
-        	if ($inboxLink.attr('aria-selected') == 'true') {
+        	if (module.Utils.isInboxActive()) {
         		$('#btn-checkmail').click();	
         	}
         }, 5000);

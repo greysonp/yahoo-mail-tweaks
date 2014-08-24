@@ -1,3 +1,5 @@
+var notificationCount = 0;
+
 chrome.browserAction.onClicked.addListener(function(tab) {
     navigateToMail();
 });
@@ -8,7 +10,6 @@ chrome.notifications.onClicked.addListener(function(id) {
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        console.log('Received a message!');
         if (request.action == 'notification') {
             var params = request.params;
             makeNotification(params.title, params.message)
@@ -17,15 +18,21 @@ chrome.runtime.onMessage.addListener(
 );
 
 function makeNotification(title, message) {
-    chrome.notifications.create('id', {
+    console.log('About to make a notification.');
+    chrome.notifications.create('newEmail' + notificationCount, {
         'type': 'basic',
         'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
         'title': title,
         'message': message,
         'isClickable': true
     }, function(id) {
-        console.log(id);
+        console.log('Made a notification with id: ' + id);
     });
+    notificationCount++;
+    // Better safe than sorry
+    if (notificationCount > 2000000000) {
+        notificationCount = 0;
+    }
 }
 
 function navigateToMail() {

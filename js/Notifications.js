@@ -12,23 +12,22 @@ this.ymail = this.ymail || {};
     }
 
     function checkNotifications() {
-        $emailList = $('.list-view-items-page');
-        var emailCount = getEmailCount();
-
-        console.log("oldEmailCount: " + oldEmailCount + " | new: " + emailCount);
-        // If there's only one new email
-        if (emailCount === oldEmailCount + 1) {
-            createNotification('You Have a New Email!', 'Go check it out!');
+        // If we don't do this, then switching folders would change the email count
+        // and incorrectly trigger a notfication
+        if (!module.Utils.isInboxActive()) {
+            return;
         }
-        // If there's more than one new email
-        else if (emailCount > oldEmailCount) {
-            var numNew = emailCount - oldEmailCount;
-            createNotification('You Have ' + numNew + ' New Emails', 'Go check them out!');
+
+        var emailCount = getEmailCount();
+        if (emailCount > oldEmailCount) {
+            createNotification('You Have a New Email!', 'Go check it out!');
         }
         oldEmailCount = emailCount;
     }
 
     function getEmailCount() {
+        // We have to re-query to ensure we get the updated child count
+        $emailList = $('.list-view-items-page');
         if ($emailList) {
             return $emailList.children().length;
         }
@@ -36,6 +35,7 @@ this.ymail = this.ymail || {};
     }
 
     function createNotification(title, message) {
+        console.log('Sending message to create notification.');
         chrome.runtime.sendMessage({ 
             'action': 'notification',
             'params': {
