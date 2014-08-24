@@ -1,12 +1,14 @@
 this.ymail = this.ymail || {};
 
 (function(module) {
-	
-	module.AutoRefresh = function() {
+    
+    module.AutoRefresh = function() {
         setInterval(function() {
-        	if (module.Utils.isInboxActive()) {
-        		$('#btn-checkmail').click();	
-        	}
+            // If any checkboxes are selected, auto-refreshing will deselect them
+            var numChecked = $('.list-view-items-page input:checked').length;
+            if (module.Utils.isInboxActive() && numChecked === 0) {
+                $('#btn-checkmail').click();    
+            }
         }, 5000);
     }
 
