@@ -15,6 +15,7 @@ this.ymail = this.ymail || {};
         $emailList = $('.list-view-items-page');
         var emailCount = getEmailCount();
 
+        console.log("oldEmailCount: " + oldEmailCount + " | new: " + emailCount);
         // If there's only one new email
         if (emailCount === oldEmailCount + 1) {
             createNotification('You Have a New Email!', 'Go check it out!');

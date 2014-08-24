@@ -2,6 +2,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     navigateToMail();
 });
 
+chrome.notifications.onClicked.addListener(function(id) {
+    navigateToMail();
+});
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log('Received a message!');
@@ -17,7 +21,8 @@ function makeNotification(title, message) {
         'type': 'basic',
         'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
         'title': title,
-        'message': message
+        'message': message,
+        'isClickable': true
     }, function(id) {
         console.log(id);
     });
