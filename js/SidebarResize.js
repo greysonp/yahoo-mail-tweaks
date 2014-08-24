@@ -5,6 +5,9 @@ this.ymail = this.ymail || {};
     var $leftPanel;
     var $rightPanel;
 
+    var $leftFrost;
+    var $rightFrost;
+
     var oldX;
     var isDragging = false;
 
@@ -14,6 +17,10 @@ this.ymail = this.ymail || {};
     module.SidebarResize = function() {
         $leftPanel = $('#shellnavigation');
         $rightPanel = $('#shellcontent');
+
+        $leftFrost = $('.frost-btn.frost');
+        $rightFrost = $('.frost-container.frost');
+
         sidebarWidth = $leftPanel.width();
         contentMargin = $rightPanel.css('margin-left');
         contentMargin = parseInt(contentMargin.substring(0, contentMargin.length - 2));
@@ -45,9 +52,11 @@ this.ymail = this.ymail || {};
     function expandSidebar(amount) {
         sidebarWidth += amount;
         $leftPanel.width(sidebarWidth);
+        $leftFrost.width(sidebarWidth);
 
         contentMargin += amount;
         $rightPanel.css('margin-left', contentMargin + 'px');
+        $rightFrost.css('margin-left', contentMargin + 'px');
     }
 
 })(this.ymail);
