@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 function makeNotification(title, message) {
-    console.log('About to make a notification.');
     chrome.notifications.create('newEmail' + notificationCount, {
         'type': 'basic',
         'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
@@ -26,7 +25,7 @@ function makeNotification(title, message) {
         'message': message,
         'isClickable': true
     }, function(id) {
-        console.log('Made a notification with id: ' + id);
+        // Don't need to do anything
     });
     notificationCount++;
     // Better safe than sorry

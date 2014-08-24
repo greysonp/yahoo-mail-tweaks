@@ -35,7 +35,6 @@ this.ymail = this.ymail || {};
     }
 
     function createNotification(title, message) {
-        console.log('Sending message to create notification.');
         chrome.runtime.sendMessage({ 
             'action': 'notification',
             'params': {
