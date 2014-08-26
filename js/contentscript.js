@@ -5,9 +5,7 @@
     $(window).load(init);
 
     function init() {
-        module.Notifications();
         module.SidebarResize();
-        module.AutoRefresh();
     }
     
 })(this.ymail);

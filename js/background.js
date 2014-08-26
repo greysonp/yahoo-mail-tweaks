@@ -1,5 +1,7 @@
 var notificationCount = 0;
+var oldUnreadCount = 0;
 
+updateBadge();
 setInterval(updateBadge, 5000);
 
 chrome.browserAction.onClicked.addListener(function(tab) {
@@ -9,15 +11,6 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 chrome.notifications.onClicked.addListener(function(id) {
     navigateToMail();
 });
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.action == 'notification') {
-            var params = request.params;
-            makeNotification(params.title, params.message)
-        }
-    }
-);
 
 function makeNotification(title, message) {
     chrome.notifications.create('newEmail' + notificationCount, {
@@ -70,6 +63,14 @@ function updateBadge() {
         chrome.browserAction.setBadgeText({
             'text': count + ''
         });
+        if (count.length > 0) {
+            count = parseInt(count);
+            if (count > oldUnreadCount) {
+                var plural = count > 1 ? 's' : '';
+                makeNotification('You Have a New Email!', 'You currently have ' + count + ' unread email' + plural + '.');
+                oldUnreadCount = count;
+            }
+        }
     });
     
 }
@@ -77,12 +78,15 @@ function updateBadge() {
 function getUnreadEmailCount(callback) {
     getMailTab(function(tab) {
         if (!tab) {
-            callback('?');
+            callback('');
         }
         else {
-            var unreadCount = tab.title.match(/\(([0-9]+) unread\)/)[1];
+            var unreadCount = tab.title.match(/\(([0-9]+) unread\)/);
             if (!unreadCount) {
                 unreadCount = 0;
+            }
+            else {
+                unreadCount = unreadCount[1];
             }
             callback(unreadCount);
         }
