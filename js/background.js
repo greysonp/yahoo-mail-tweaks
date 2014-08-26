@@ -1,5 +1,7 @@
 var notificationCount = 0;
 
+setInterval(updateBadge, 5000);
+
 chrome.browserAction.onClicked.addListener(function(tab) {
     navigateToMail();
 });
@@ -34,20 +36,56 @@ function makeNotification(title, message) {
     }
 }
 
-function navigateToMail() {
+function getMailTab(callback) {
     chrome.tabs.query({
         'url': 'https://*.mail.yahoo.com/*'
     }, function(tabs) {
-        // If a mail tab isn't open, create one
         if (tabs.length == 0) {
+            callback(null);
+        }
+        else {
+            callback(tabs[0]);
+        }
+    });
+}
+
+function navigateToMail() {
+    getMailTab(function(tab) {
+        // If a mail tab isn't open, create one
+        if (!tab) {
             chrome.tabs.create({ 
                 'url': 'https://mail.yahoo.com/'
             });
         }
         // Otherwise, navigate to the first instance of an open mail tab
         else {
-            chrome.tabs.update(tabs[0].id, { 'active': true });
-            chrome.windows.update(tabs[0].windowId, { 'focused': true });
+            chrome.tabs.update(tab.id, { 'active': true });
+            chrome.windows.update(tab.windowId, { 'focused': true });
         }
     });
+}
+
+function updateBadge() {
+    getUnreadEmailCount(function(count) {
+        chrome.browserAction.setBadgeText({
+            'text': count + ''
+        });
+    });
+    
+}
+
+function getUnreadEmailCount(callback) {
+    getMailTab(function(tab) {
+        if (!tab) {
+            callback('?');
+        }
+        else {
+            var unreadCount = tab.title.match(/\(([0-9]+) unread\)/)[1];
+            if (!unreadCount) {
+                unreadCount = 0;
+            }
+            callback(unreadCount);
+        }
+    })
+    
 }
