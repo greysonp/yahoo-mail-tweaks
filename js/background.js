@@ -68,8 +68,8 @@ function updateBadge() {
             if (count > oldUnreadCount) {
                 var plural = count > 1 ? 's' : '';
                 makeNotification('You Have a New Email!', 'You currently have ' + count + ' unread email' + plural + '.');
-                oldUnreadCount = count;
             }
+            oldUnreadCount = count;
         }
     });
     
@@ -90,6 +90,5 @@ function getUnreadEmailCount(callback) {
             }
             callback(unreadCount);
         }
-    })
-    
+    });
 }
