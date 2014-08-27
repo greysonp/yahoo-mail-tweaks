@@ -1,5 +1,5 @@
 var notificationCount = 0;
-var oldUnreadCount = 0;
+var oldUnreadCount = -1;
 
 updateBadge();
 setInterval(updateBadge, 5000);
@@ -65,7 +65,7 @@ function updateBadge() {
         });
         if (count.length > 0) {
             count = parseInt(count);
-            if (count > oldUnreadCount) {
+            if (count > oldUnreadCount && oldUnreadCount >= 0) {
                 var plural = count > 1 ? 's' : '';
                 makeNotification('You Have a New Email!', 'You currently have ' + count + ' unread email' + plural + '.');
             }

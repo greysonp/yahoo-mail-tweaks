@@ -6,6 +6,7 @@
 
     function init() {
         module.SidebarResize();
+        module.NonInboxUnreadCount();
     }
     
 })(this.ymail);
