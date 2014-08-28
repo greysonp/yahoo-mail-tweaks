@@ -13,20 +13,22 @@ chrome.notifications.onClicked.addListener(function(id) {
 });
 
 function makeNotification(title, message) {
-    chrome.notifications.create('newEmail' + notificationCount, {
-        'type': 'basic',
-        'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
-        'title': title,
-        'message': message,
-        'isClickable': true
-    }, function(id) {
-        // Don't need to do anything
+    clearAllNotifications(function() {
+        chrome.notifications.create('newEmail' + notificationCount, {
+            'type': 'basic',
+            'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
+            'title': title,
+            'message': message,
+            'isClickable': true
+        }, function(id) {
+            // Don't need to do anything
+        });
+        notificationCount++;
+        // Better safe than sorry
+        if (notificationCount > 2000000000) {
+            notificationCount = 0;
+        }
     });
-    notificationCount++;
-    // Better safe than sorry
-    if (notificationCount > 2000000000) {
-        notificationCount = 0;
-    }
 }
 
 function getMailTab(callback) {
@@ -89,6 +91,26 @@ function getUnreadEmailCount(callback) {
                 unreadCount = unreadCount[1];
             }
             callback(unreadCount);
+        }
+    });
+}
+
+function clearAllNotifications(callback) {
+    chrome.notifications.getAll(function(ids) {
+        var target = Object.keys(ids).length;
+        var current = 0;
+        if (target > 0) {
+            for (id in ids) {
+                chrome.notifications.clear(id, function(wasCleared) {
+                    current++;
+                    if (current >= target && callback) {
+                        callback();
+                    }
+                })
+            }
+        }
+        else if (callback) {
+            callback();
         }
     });
 }
