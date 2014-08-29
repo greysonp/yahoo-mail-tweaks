@@ -1,34 +1,49 @@
 var notificationCount = 0;
 var oldUnreadCount = -1;
+var settings = {};
+var prefs = {
+    KEY: 'ymail',
+    VISUAL_NOTIFICATIONS: 'visualNotifications',
+    NOTIFICATION_UPDATE_INTERVAL: 'notificationUpdateInterval',
+    SIDEBAR_RESIZE: 'sidebarResize',
+    INCLUDE_FOLDER_UNREAD_COUNT: 'includeFolderUnreadCount'
+}
 
-updateBadge();
-setInterval(updateBadge, 5000);
+getUpdatedSettings(function() {
+    updateBadge();
+    setInterval(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-    navigateToMail();
-});
+    chrome.browserAction.onClicked.addListener(function(tab) {
+        navigateToMail();
+    });
 
-chrome.notifications.onClicked.addListener(function(id) {
-    navigateToMail();
-});
+    chrome.notifications.onClicked.addListener(function(id) {
+        navigateToMail();
+    });    
+})
+
 
 function makeNotification(title, message) {
-    clearAllNotifications(function() {
-        chrome.notifications.create('newEmail' + notificationCount, {
-            'type': 'basic',
-            'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
-            'title': title,
-            'message': message,
-            'isClickable': true
-        }, function(id) {
-            // Don't need to do anything
+    getUpdatedSettings(function() {
+        if (!settings[prefs.VISUAL_NOTIFICATIONS]) return;    
+        clearAllNotifications(function() {
+            chrome.notifications.create('newEmail' + notificationCount, {
+                'type': 'basic',
+                'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
+                'title': title,
+                'message': message,
+                'isClickable': true
+            }, function(id) {
+                // Don't need to do anything
+            });
+            notificationCount++;
+            // Better safe than sorry
+            if (notificationCount > 2000000000) {
+                notificationCount = 0;
+            }
         });
-        notificationCount++;
-        // Better safe than sorry
-        if (notificationCount > 2000000000) {
-            notificationCount = 0;
-        }
     });
+    
 }
 
 function getMailTab(callback) {
@@ -111,6 +126,30 @@ function clearAllNotifications(callback) {
         }
         else if (callback) {
             callback();
+        }
+    });
+}
+
+function getUpdatedSettings(callback) {
+    chrome.storage.sync.get('ymail', function(data) {
+        // if we don't have any data saved in storage
+        if (!data[prefs.KEY]) {
+            // store a list of default settingss
+            var defaultSettings = {};
+            defaultSettings[prefs.VISUAL_NOTIFICATIONS] = true;
+            defaultSettings[prefs.NOTIFICATION_UPDATE_INTERVAL] = 5000;
+            defaultSettings[prefs.SIDEBAR_RESIZE] = true;
+            defaultSettings[prefs.INCLUDE_FOLDER_UNREAD_COUNT] = false;
+            settings = defaultSettings;
+
+            var settingsWrapper = {};
+            settingsWrapper[prefs.KEY] = defaultSettings;
+            chrome.storage.sync.set(settingsWrapper, callback);
+        }
+        // otherwise, we must have put defaults in already, so just update our copy
+        else {
+            settings = data[prefs.KEY];
+            callback();    
         }
     });
 }
