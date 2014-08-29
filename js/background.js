@@ -11,6 +11,7 @@ var prefs = {
 
 getUpdatedSettings(function() {
     updateBadge();
+
     setInterval(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
 
     chrome.browserAction.onClicked.addListener(function(tab) {
@@ -88,6 +89,9 @@ function updateBadge() {
             }
             oldUnreadCount = count;
         }
+        else {
+            oldUnreadCount = 0;
+        }
     });
     
 }
@@ -131,7 +135,7 @@ function clearAllNotifications(callback) {
 }
 
 function getUpdatedSettings(callback) {
-    chrome.storage.sync.get('ymail', function(data) {
+    chrome.storage.sync.get(prefs.KEY, function(data) {
         // if we don't have any data saved in storage
         if (!data[prefs.KEY]) {
             // store a list of default settingss
