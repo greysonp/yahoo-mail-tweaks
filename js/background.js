@@ -1,6 +1,7 @@
 var notificationCount = 0;
 var oldUnreadCount = -1;
 var settings = {};
+var badgeTimerId;
 var prefs = {
     KEY: 'ymail',
     VISUAL_NOTIFICATIONS: 'visualNotifications',
@@ -9,10 +10,10 @@ var prefs = {
     INCLUDE_FOLDER_UNREAD_COUNT: 'includeFolderUnreadCount'
 }
 
-getUpdatedSettings(function() {
+updateCachedSettings(function() {
+    // This kicks off a repeated process. Do not call again
+    // without clearing the timer!
     updateBadge();
-
-    setInterval(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
 
     chrome.browserAction.onClicked.addListener(function(tab) {
         navigateToMail();
@@ -21,11 +22,21 @@ getUpdatedSettings(function() {
     chrome.notifications.onClicked.addListener(function(id) {
         navigateToMail();
     });    
-})
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === 'settingsUpdate') {
+        updateCachedSettings(function() {
+            // Get rid of the old updat timer and start a new one
+            clearTimeout(badgeTimerId);
+            updateBadge();
+        });
+    }
+});
 
 
 function makeNotification(title, message) {
-    getUpdatedSettings(function() {
+    updateCachedSettings(function() {
         if (!settings[prefs.VISUAL_NOTIFICATIONS]) return;    
         clearAllNotifications(function() {
             chrome.notifications.create('newEmail' + notificationCount, {
@@ -92,6 +103,9 @@ function updateBadge() {
         else {
             oldUnreadCount = 0;
         }
+        // Have to use a timeout instead of an interval in case the interval duration
+        // changes via the options
+        badgeTimerId = setTimeout(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
     });
     
 }
@@ -123,7 +137,7 @@ function clearAllNotifications(callback) {
                 chrome.notifications.clear(id, function(wasCleared) {
                     current++;
                     if (current >= target && callback) {
-                        callback();
+                        if (callback) callback();
                     }
                 })
             }
@@ -134,7 +148,7 @@ function clearAllNotifications(callback) {
     });
 }
 
-function getUpdatedSettings(callback) {
+function updateCachedSettings(callback) {
     chrome.storage.sync.get(prefs.KEY, function(data) {
         // if we don't have any data saved in storage
         if (!data[prefs.KEY]) {
@@ -153,7 +167,7 @@ function getUpdatedSettings(callback) {
         // otherwise, we must have put defaults in already, so just update our copy
         else {
             settings = data[prefs.KEY];
-            callback();    
+            if (callback) callback();
         }
     });
 }

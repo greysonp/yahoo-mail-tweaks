@@ -33,4 +33,17 @@ this.ymail = this.ymail || {};
             }
         });
     }
+
+    module.Settings.setSettings = function(settings, callback) {
+        var settingsWrapper = {};
+        settingsWrapper[module.Settings.KEY] = settings;
+        chrome.storage.sync.set(settingsWrapper, function() {
+            broadcastSettingsUpdate();
+            if (callback) callback()
+        });
+    }
+
+    function broadcastSettingsUpdate() {
+        chrome.runtime.sendMessage({'action': 'settingsUpdate'});
+    }
 })(this.ymail);

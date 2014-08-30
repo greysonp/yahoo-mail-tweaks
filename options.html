@@ -1,12 +1,15 @@
 <html>
     <head>
+        <title>Options - Y! Mail Tweaks</title>
         <style>
             .settings-row {
                 margin: 8px 0;
             }
         </style>
         <link rel="stylesheet" href="css/chrome-bootstrap.min.css">
-        <script></script>
+        <script src="js/libs/jquery-2.1.1.min.js"></script>
+        <script src="js/Settings.js"></script>
+        <script src="js/options.js"></script>
     </head>
     <body class="chrome-bootstrap">
         <div class="frame">
@@ -28,7 +31,7 @@
                             <h3>Notifications</h3>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox">
+                                    <input id="js-notifications" type="checkbox">
                                     <span>Receive visual notifications for new mail</span>
                                 </label>
                             </div>
@@ -38,29 +41,30 @@
                                 How often the badge count is updated on the menu bar, and also how often we check
                                 to see if a visual notification needs to be sent.
                                 <div class="settings-row">
-                                    <select>
-                                        <option>1 sec</option>
-                                        <option>5 sec</option>
-                                        <option>10 sec</option>
-                                        <option>30 sec</option>
-                                        <option>1 min</option>
-                                        <option>5 min</option>
-                                        <option>10 min</option>
+                                    <select id="js-interval">
+                                        <option value="1000">1 sec</option>
+                                        <option value="5000">5 sec</option>
+                                        <option value="10000">10 sec</option>
+                                        <option value="30000">30 sec</option>
+                                        <option value="60000">1 min</option>
+                                        <option value="300000">5 min</option>
+                                        <option value="600000">10 min</option>
                                     </select>
                                 </div>
                         </section>
 
                         <section>
                             <h3>Inside Y! Mail</h3>
+                            <p>You must refresh your Y! Mail tab in order to apply changes to these settings.</p>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox">
+                                    <input id="js-sidebar" type="checkbox">
                                     <span>Add the ability to resize the sidebar</span>
                                 </label>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox">
+                                    <input id="js-unread" type="checkbox">
                                     <span>Include unread items outside of your inbox in your total unread count</span>
                                 </label>
                             </div>
