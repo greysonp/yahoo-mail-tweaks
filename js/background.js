@@ -163,6 +163,10 @@ function updateCachedSettings(callback) {
             var settingsWrapper = {};
             settingsWrapper[prefs.KEY] = defaultSettings;
             chrome.storage.sync.set(settingsWrapper, callback);
+
+            // If we have to set the default settings, it means it's the
+            // first-time launch
+            chrome.tabs.create({ 'url': chrome.extension.getURL('welcome.html') });
         }
         // otherwise, we must have put defaults in already, so just update our copy
         else {

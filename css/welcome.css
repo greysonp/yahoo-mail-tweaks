@@ -1,0 +1,76 @@
+html, body {
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial';
+    background-color: #fafafc;
+    font-weight: 300;
+    text-align: center;
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+    margin: 10px 0;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+h4 {
+    font-weight: normal;
+}
+
+.subheading {
+    opacity: 0.5;
+    margin-top: 0;
+}
+
+ul.features {
+    list-style: none;
+    display: inline-block;
+    margin: 20px 0 40px 0;
+    padding: 0 0 65px 0;
+    background-color: #fff;
+    border: 1px solid #e2e2e6;
+}
+
+ul.features > li {
+    display: inline-block;
+    padding: 15px;
+    width: 350px;
+}
+
+ul.features > li > p {
+    font-size: 14px;
+}
+
+ul.features > li > p.note {
+    position: absolute;
+    width: 350px;
+}
+.important {
+    color: #cc0000;
+    margin-top: 50px;
+    font-weight: bold;
+}
+
+video, img {
+    border: 1px solid #e2e2e6;
+}
+
+footer {
+    color: #777;
+    font-style: italic;
+}
+
+/*
+ * Sticky Footer
+ * http://ryanfait.com/html5-sticky-footer/
+ */
+.wrapper {
+    min-height: 100%;
+    margin: 0 auto -40px;
+}
+
+footer, .push {
+    height: 40px;
+}
