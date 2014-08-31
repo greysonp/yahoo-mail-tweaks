@@ -41,7 +41,7 @@ function makeNotification(title, message) {
         clearAllNotifications(function() {
             chrome.notifications.create('newEmail' + notificationCount, {
                 'type': 'basic',
-                'iconUrl': chrome.extension.getURL('img/icon-32x32.png'),
+                'iconUrl': chrome.extension.getURL('img/icon32.png'),
                 'title': title,
                 'message': message,
                 'isClickable': true
