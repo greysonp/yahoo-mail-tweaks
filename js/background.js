@@ -105,14 +105,16 @@ function updateBadge() {
         }
         // Have to use a timeout instead of an interval in case the interval duration
         // changes via the options
-        badgeTimerId = setTimeout(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
+        if (settings[prefs.NOTIFICATION_UPDATE_INTERVAL] > 0) {
+            badgeTimerId = setTimeout(updateBadge, settings[prefs.NOTIFICATION_UPDATE_INTERVAL]);
+        }
     });
     
 }
 
 function getUnreadEmailCount(callback) {
     getMailTab(function(tab) {
-        if (!tab) {
+        if (!tab || settings[prefs.NOTIFICATION_UPDATE_INTERVAL] < 0) {
             callback('');
         }
         else {
