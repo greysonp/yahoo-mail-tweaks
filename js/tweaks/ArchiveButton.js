@@ -27,8 +27,11 @@ this.ymail = this.ymail || {};
             'class': 'btn multimsg',
             'data-action': 'archive',
         });
-        var $menuButtonIcon = $('<i></i>', { 'class': 'icon-delete'});
-        var $menuButtonText = $('<span></span>', { 
+        var $menuButtonIcon = $('<img></img>', {
+            'src': chrome.extension.getURL('img/icon-archive.png'),
+            'class': 'icon-archive'
+        });
+        var $menuButtonText = $('<span></span>', {
             'class': 'icon-text',
             'text': 'Archive'
         });
@@ -38,7 +41,7 @@ this.ymail = this.ymail || {};
         $menuButton.append($menuButtonText);
 
         // Add it to the menu bar
-        $('#pagetoolbar').append($menuButton);
+        $('#pagetoolbar #btn-delete').before($menuButton);
 
         // Add our click event
         $('#btn-archive').click(archiveCheckedMessages);

@@ -21,3 +21,11 @@
 	webkit-transition: none !important;
 	transition: none !important;
 }
+
+.icon-archive {
+    width: 19px;
+    height: auto;
+    display: inline;
+    position: relative;
+    top: 3px;
+}
