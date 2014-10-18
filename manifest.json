@@ -28,6 +28,7 @@
         "js/tweaks/AutoRefresh.js",
         "js/tweaks/NonInboxUnreadCount.js",
         "js/tweaks/SidebarResize.js",
+        "js/tweaks/ArchiveButton.js",
         "js/contentscript.js"
       ],
 

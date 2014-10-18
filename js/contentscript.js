@@ -12,6 +12,7 @@
             if (settings[module.Settings.INCLUDE_FOLDER_UNREAD_COUNT]) {
                 module.NonInboxUnreadCount();   
             }
+            module.ArchiveButton();
         });
     }
 })(this.ymail);
