@@ -23,11 +23,11 @@
                   "https://*.mail.yahoo.com/*"],
       "js": [
         "js/libs/jquery-2.1.1.min.js",
-        "js/Utils.js",
-        "js/Settings.js",
-        "js/AutoRefresh.js",
-        "js/NonInboxUnreadCount.js",
-        "js/SidebarResize.js",
+        "js/utils/Utils.js",
+        "js/utils/Settings.js",
+        "js/tweaks/AutoRefresh.js",
+        "js/tweaks/NonInboxUnreadCount.js",
+        "js/tweaks/SidebarResize.js",
         "js/contentscript.js"
       ],
 
