@@ -7,21 +7,24 @@
 }
 
 .drag-bar {
-	height: 100%;
-	width: 7px;
-	position: absolute;
-	right: 0;
+    height: 100%;
+    width: 7px;
+    position: absolute;
+    right: 0;
 }
 
 .drag-bar:hover {
-	cursor: col-resize;
+    cursor: col-resize;
 }
 
 #shellnavigation {
-	webkit-transition: none !important;
-	transition: none !important;
+    webkit-transition: none !important;
+    transition: none !important;
 }
 
+/**
+ * The archive button on the top menu bar
+ */
 .icon-archive-menu {
     width: 19px;
     height: auto;
@@ -30,10 +33,20 @@
     top: 3px;
 }
 
+/**
+ * The archive button in the email action bar
+ */
 .icon-archive-action {
     width: 16px;
     height: 12px !important;
     display: inline;
     position: relative;
     top: -2px;
+}
+
+/**
+ * Makes it so the little search icon doesn't look like it overlaps the sender name
+ */
+.thread-content .list-view-item.to1:hover.flagged .from, .thread-content .list-view-item.to1:hover .from {
+    padding-right: 97px !important;
 }
