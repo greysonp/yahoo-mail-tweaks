@@ -27,6 +27,8 @@ this.ymail = this.ymail || {};
             'id': 'btn-archive',
             'class': 'btn multimsg',
             'data-action': 'archive',
+            'aria-label': 'Archive selected conversations',
+            'title': 'Archive selected conversations'
         });
         var $menuButtonIcon = $('<img></img>', {
             'src': chrome.extension.getURL('img/icon-archive.png'),
@@ -67,7 +69,8 @@ this.ymail = this.ymail || {};
                 // Build an archive button and slap it in
                 $toolbar.append($('<img></img>', {
                     'src': chrome.extension.getURL('img/icon-archive.png'),
-                    'class': 'icon icon-archive-action'
+                    'class': 'icon icon-archive-action',
+                    'title': 'Archive this conversation'
                 }));
 
                 // Add our click event
