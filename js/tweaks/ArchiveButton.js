@@ -5,6 +5,7 @@ this.ymail = this.ymail || {};
     module.ArchiveButton = function() {
         createFolderMenu();
         addArchiveMenuButton();
+        addArchiveActionButton();
     }
 
     /**
@@ -29,7 +30,7 @@ this.ymail = this.ymail || {};
         });
         var $menuButtonIcon = $('<img></img>', {
             'src': chrome.extension.getURL('img/icon-archive.png'),
-            'class': 'icon-archive'
+            'class': 'icon-archive-menu'
         });
         var $menuButtonText = $('<span></span>', {
             'class': 'icon-text',
@@ -46,7 +47,47 @@ this.ymail = this.ymail || {};
         // Add our click event
         $('#btn-archive').click(archiveCheckedMessages);
     }
-    
+
+    function addArchiveActionButton() {
+        // Whenever we mouse over an email
+        $(document).on('mouseover', '.list-view-item-container', function(event) {
+            console.log('roll-over');
+            var $container = $(this);
+
+            // If a toolbar exists
+            var $toolbar = $container.find('.action-toolbar');
+            if ($toolbar && $toolbar.length > 0) {
+
+                // If we didn't add an archive button yet
+                var $archiveButton = $toolbar.find('.icon-archive-action');
+                if (!$archiveButton || $archiveButton.length === 0) {
+
+                    // Build an archive button and slap it in
+                    $toolbar.append($('<img></img>', {
+                        'src': chrome.extension.getURL('img/icon-archive.png'),
+                        'class': 'icon icon-archive-action'
+                    }));
+
+                    // Add our click event
+                    $(this).find('.icon-archive-action').click(function(e) {
+                        $container.find('input[type="checkbox"]').click();
+                        archiveCheckedMessages();
+                        e.stopPropagation();
+                    });
+                } else {
+                    $archiveButton.css('visibility', 'visible');
+                }
+            }
+        });
+
+        $(document).on('mouseleave', '.list-view-item-container', function(event) {
+            var $archiveButton = $(this).find('.archive-action-btn');
+            if ($archiveButton && $archiveButton.length > 0) {
+                $archiveButton.css('visibility', 'hidden');
+            }
+        });
+    }
+
     /**
      * Implementing the functionality of the archive button relies
      * on clicking on the "Archive" entry in the move drop-down list.
@@ -71,7 +112,5 @@ this.ymail = this.ymail || {};
                 $('#pagetoolbar').addClass('hasnomsg');
             }  
         }, 5);
-    }    
-
-
+    }
 })(this.ymail);

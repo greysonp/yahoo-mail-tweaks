@@ -22,10 +22,18 @@
 	transition: none !important;
 }
 
-.icon-archive {
+.icon-archive-menu {
     width: 19px;
     height: auto;
     display: inline;
     position: relative;
     top: 3px;
+}
+
+.icon-archive-action {
+    width: 16px;
+    height: 12px !important;
+    display: inline;
+    position: relative;
+    top: -2px;
 }
