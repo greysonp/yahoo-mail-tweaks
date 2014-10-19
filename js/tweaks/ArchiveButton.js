@@ -50,42 +50,64 @@ this.ymail = this.ymail || {};
 
     function addArchiveActionButton() {
         // Whenever we mouse over an email
-        $(document).on('mouseover', '.list-view-item-container', function(event) {
-            console.log('roll-over');
-            var $container = $(this);
-
-            // If a toolbar exists
-            var $toolbar = $container.find('.action-toolbar');
-            if ($toolbar && $toolbar.length > 0) {
-
-                // If we didn't add an archive button yet
-                var $archiveButton = $toolbar.find('.icon-archive-action');
-                if (!$archiveButton || $archiveButton.length === 0) {
-
-                    // Build an archive button and slap it in
-                    $toolbar.append($('<img></img>', {
-                        'src': chrome.extension.getURL('img/icon-archive.png'),
-                        'class': 'icon icon-archive-action'
-                    }));
-
-                    // Add our click event
-                    $(this).find('.icon-archive-action').click(function(e) {
-                        $container.find('input[type="checkbox"]').click();
-                        archiveCheckedMessages();
-                        e.stopPropagation();
-                    });
-                } else {
-                    $archiveButton.css('visibility', 'visible');
-                }
-            }
+        $(document).on('mouseenter', '.list-view-item-container', function(event) {
+            addArchiveActionButtonToContainer($(this));
         });
+    }
 
-        $(document).on('mouseleave', '.list-view-item-container', function(event) {
-            var $archiveButton = $(this).find('.archive-action-btn');
-            if ($archiveButton && $archiveButton.length > 0) {
-                $archiveButton.css('visibility', 'hidden');
+    function addArchiveActionButtonToContainer($container) {
+        // If a toolbar exists
+        var $toolbar = $container.find('.action-toolbar');
+        if ($toolbar && $toolbar.length > 0) {
+
+            // If we didn't add an archive button yet
+            var $archiveButton = $toolbar.find('.icon-archive-action');
+            if (!$archiveButton || $archiveButton.length === 0) {
+
+                // Build an archive button and slap it in
+                $toolbar.append($('<img></img>', {
+                    'src': chrome.extension.getURL('img/icon-archive.png'),
+                    'class': 'icon icon-archive-action'
+                }));
+
+                // Add our click event
+                $container.find('.icon-archive-action').click(function(e) {
+                    e.stopPropagation();
+
+                    // Check and archive the message
+                    $container.find('input[type="checkbox"]').click();
+
+                    var numEmailsBefore = $('.list-view-items-page').children().length;
+                    archiveCheckedMessages();
+
+                    // After we archive the messages, we have to wait for the list-view to
+                    // rebuild so we can add our action button to a hovered element (if there is one)
+                    var iterCount = 0;
+                    var MAX_ITER = 30;
+                    var timerId = setInterval(function() {
+                        if (iterCount >= MAX_ITER) {
+                            console.error('Stopping hover check: hit max iter count of ' + MAX_ITER);
+                            clearInterval(timerId);
+                            return;
+                        }
+
+                        var numEmailsAfter = $('.list-view-items-page').children('.list-view-item-container').length;
+                        if (numEmailsAfter !== numEmailsBefore && numEmailsAfter > 0) {
+                            var $hoveredItem = $('.list-view-item-container:hover');
+                            if ($hoveredItem && $hoveredItem.length > 0) {
+                                addArchiveActionButtonToContainer($hoveredItem);
+                                clearInterval(timerId);
+                            }
+                        } else if (numEmailsAfter === 0) {
+                            clearInterval(timerId);
+                        }
+                        iterCount++;
+                    }, 5);
+                });
+            } else {
+                $archiveButton.css('visibility', 'visible');
             }
-        });
+        }
     }
 
     /**
@@ -103,11 +125,11 @@ this.ymail = this.ymail || {};
         $('#btn-move').click(); 
 
         // Wait until the list is created
-        var id = setInterval(function() {
+        var timerId = setInterval(function() {
             // When it is created, stop checking and click off the menu to hide it again.
             $menu = $('#menu-move-folder');
             if ($menu && $menu.length > 0) {
-                clearInterval(id);
+                clearInterval(timerId);
                 $('body').click();
                 $('#pagetoolbar').addClass('hasnomsg');
             }  
