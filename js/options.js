@@ -11,6 +11,7 @@ this.ymail = this.ymail || {};
             linkCheckboxToSetting('#js-notifications', module.Settings.VISUAL_NOTIFICATIONS);
             linkCheckboxToSetting('#js-sidebar', module.Settings.SIDEBAR_RESIZE);
             linkCheckboxToSetting('#js-unread', module.Settings.INCLUDE_FOLDER_UNREAD_COUNT);
+            linkCheckboxToSetting('#js-archive', module.Settings.ARCHIVE_BUTTON);
             linkSelectToSetting('#js-interval', module.Settings.NOTIFICATION_UPDATE_INTERVAL);
         });
     }

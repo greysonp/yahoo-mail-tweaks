@@ -10,9 +10,11 @@
                 module.SidebarResize();
             }
             if (settings[module.Settings.INCLUDE_FOLDER_UNREAD_COUNT]) {
-                module.NonInboxUnreadCount();   
+                module.NonInboxUnreadCount();
             }
-            module.ArchiveButton();
+            if (settings[module.Settings.ARCHIVE_BUTTON]) {
+                module.ArchiveButton();
+            }
         });
     }
 })(this.ymail);
